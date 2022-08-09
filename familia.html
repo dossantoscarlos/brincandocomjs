@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head> 
+     <meta charset="utf-8">
+    <title>
+        Familia
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <style>
+    input {
+      font-size: 14pt;
+      border:2px solid purple;
+      border-radius:6px;
+      padding: 4px;
+      color:blue
+    }
+    button{
+      background-color: blueviolet;
+      color:white;
+      padding:14pt;
+      font-size: 16pt;
+      font-weight: bold;
+      width: 200px;
+      border-radius: 6px;
+    }
+  </style>
+  <script lang="javascript" >
+    window.onload = function () {
+      const parentes = document.querySelector('#parentes');
+      const nome = document.querySelector('#nome');
+      const parentesco = document.querySelector('#parentesco');
+      const idade = document.querySelector('#idade');
+      const button = document.getElementsByTagName('button');
+      const salvar = document.querySelector('#salvar');
+      var showDiv = 0;
+      var familia = [];
+
+      if (localStorage.familia !== undefined ){
+        let loading  = JSON.parse(localStorage.familia);
+        for(var i = 0; i < loading.length; i++){
+          familia.push(loading[i])
+        }
+      }
+
+    salvar.onclick = ()=> {
+      const membro =  {
+        nome: nome.value,
+        parentesco:parentesco.value,
+        idade:idade.value
+      }
+      
+      familia.push(membro);
+
+      localStorage.setItem("familia",JSON.stringify(familia));     
+      var objSalvo = localStorage.getItem('familia');
+      var limpa = parentes.lastElementChild;
+
+      while (limpa){
+          parentes.removeChild(limpa);
+          limpa = parentes.lastElementChild; 
+      }
+
+      JSON.parse(objSalvo).forEach ((arr,index) => {
+
+        let div = document.createElement("div");
+        let span_nome = document.createElement("span");
+        let span_parentesco = document.createElement("span");
+        let span_idade = document.createElement("span");
+        let br = document.createElement('br');
+        let br_idade = document.createElement('br');
+        let br_parentesco = document.createElement('br');
+        let spanNome = document.createElement("span");
+        let spanIdade = document.createElement("span");
+        let spanParentesco = document.createElement("span");
+        let button = document.createElement('button');
+        let divShow = document.createElement('div');
+
+        div.setAttribute('style','padding:10px;border:2px solid blue;box-shadow:0 0 1em gold; border-radius:12px; margin-bottom:12px');
+        divShow.setAttribute('style', 'display:none');
+       
+        /**===============Nome==========================================**/
+        span_nome.setAttribute('style','font-weight:bold');
+        span_nome.textContent="Nome: ";
+        spanNome.textContent = arr.nome;
+
+        /**===============Botao===========================================**/
+        button.setAttribute('type', 'button');
+        button.textContent='Exibir';
+
+        /**====================Parentesco=================================**/
+        span_parentesco.setAttribute('style','font-weight:bold');
+        span_parentesco.textContent="Parentesco: ";
+        spanParentesco.textContent = arr.parentesco;
+
+        /**=================Idade=========================================**/
+        span_idade.setAttribute('style','font-weight:bold');
+        span_idade.textContent="Idade: ";
+        spanIdade.textContent = arr.idade;
+
+        /*********************DIVSHOW****************************************/
+        divShow.appendChild(span_parentesco);
+        divShow.appendChild(spanParentesco);
+        divShow.appendChild(br_parentesco);
+        divShow.appendChild(span_idade);
+        divShow.appendChild(spanIdade);
+        divShow.appendChild(br_idade);
+       
+        /*********************DIV****************************************/
+        div.appendChild(span_nome);
+        div.appendChild(spanNome);
+        div.appendChild(br);
+        div.appendChild(button);
+        div.appendChild(divShow);
+        
+        /*******************Parentes*************************************/
+        parentes.appendChild(div);
+        button.onclick = () => {
+                 
+          if (showDiv === 0) {
+              divShow.setAttribute('style', 'display:block')
+              button.textContent = 'Oculta';
+              showDiv = 1
+          }else {
+            divShow.setAttribute('style', 'display:none')
+            button.textContent='Exibir';
+            showDiv = 0
+          }
+        }
+      });
+    };
+   
+  };
+ </script>
+  <body style="font-size:24pt">
+    <div style="margin:0 auto; width:700px; display:flex; flex-direction: row;
+      justify-content: center;margin-top:100px">
+        <form name="form" >
+          <div style="padding:10px">
+            <input type="text" name="nome" id="nome" placeholder="Digite seu nome" />
+          </div>
+          <div style="padding:10px">
+            <input type="text" name="parentesco" id="parentesco" placeholder="Qual seu parentesco" />
+            </div>
+            <div style="padding:10px">
+              <input type="number" name="idade" id="idade" placeholder="Qual sua idade" />
+            </div>
+            <div style="padding:10px;display:flex;flex-direction:row; justify-content:center">
+               <button type="button" data-id="salvar" id="salvar">
+                Salvar
+            </button>
+          </div>
+        </form>
+        <div id="parentes" style="margin-left:23px;margin-top:23px; padding:10px"></div>
+    </div>
+  </body>
+</html>
